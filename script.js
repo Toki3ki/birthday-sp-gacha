@@ -23,10 +23,6 @@ const DROP_DURATION = 1180;
 const DISC_STYLES = ["disc-princess", "disc-melody", "disc-collage", "disc-lime", "disc-aqua", "disc-doodle"];
 const BOOT_ASSETS = [
   "./images/rina_blink_sprite.webp",
-  "./images/head_frame1.png",
-  "./images/head_frame2.png",
-  "./images/head_frame3.png",
-  "./images/head_frame4.png",
   "./images/disc-princess.png",
   "./images/disc-melody.png",
   "./images/disc-collage.png",
@@ -36,6 +32,8 @@ const BOOT_ASSETS = [
 ];
 const BOOT_READY_DELAY = 400;
 const BOOT_FADE_DELAY = 460;
+const BOOT_ASSET_TIMEOUT = 3500;
+const BOOT_STATIC_AVATAR_AFTER = 1800;
 
 const bootLoader = document.querySelector("#boot-loader");
 const bootProgressBar = document.querySelector("#boot-progress-bar");
@@ -105,15 +103,33 @@ function updateBootProgress(done, total, label = "preloading assets") {
 function preloadBootAsset(src) {
   return new Promise((resolve) => {
     const image = new Image();
-    const finish = () => resolve(src);
+    let settled = false;
+    const finish = (status = "loaded") => {
+      if (settled) return;
+      settled = true;
+      resolve({ src, status });
+    };
+    const timeout = window.setTimeout(() => finish("timeout"), BOOT_ASSET_TIMEOUT);
     image.onload = () => {
       if (image.decode) {
-        image.decode().then(finish).catch(finish);
+        image.decode()
+          .then(() => {
+            window.clearTimeout(timeout);
+            finish("decoded");
+          })
+          .catch(() => {
+            window.clearTimeout(timeout);
+            finish("loaded");
+          });
       } else {
-        finish();
+        window.clearTimeout(timeout);
+        finish("loaded");
       }
     };
-    image.onerror = finish;
+    image.onerror = () => {
+      window.clearTimeout(timeout);
+      finish("error");
+    };
     image.src = src;
   });
 }
@@ -134,6 +150,10 @@ function revealAppAfterBoot() {
   }, BOOT_READY_DELAY);
 }
 
+function useStaticAvatarFallback() {
+  document.body.classList.add("use-static-avatar");
+}
+
 function startBootLoader() {
   let alreadyReady = false;
   try {
@@ -149,11 +169,24 @@ function startBootLoader() {
   }
 
   let completed = 0;
+  let fallbackTimer = window.setTimeout(() => {
+    useStaticAvatarFallback();
+    updateBootProgress(completed, BOOT_ASSETS.length, "loading slowly, using static avatar");
+  }, BOOT_STATIC_AVATAR_AFTER);
   updateBootProgress(0, BOOT_ASSETS.length);
-  Promise.all(BOOT_ASSETS.map((src) => preloadBootAsset(src).then(() => {
+  Promise.all(BOOT_ASSETS.map((src) => preloadBootAsset(src).then((result) => {
     completed += 1;
-    updateBootProgress(completed, BOOT_ASSETS.length, `loading ${src.split("/").pop()}`);
+    if (src.includes("rina_blink_sprite") && result.status === "timeout") {
+      useStaticAvatarFallback();
+    }
+    const filename = src.split("/").pop();
+    updateBootProgress(
+      completed,
+      BOOT_ASSETS.length,
+      result.status === "timeout" ? `skipping slow ${filename}` : `loading ${filename}`
+    );
   }))).then(() => {
+    window.clearTimeout(fallbackTimer);
     try {
       sessionStorage.setItem("rina-system-ready", "true");
     } catch {

@@ -5029,6 +5029,13 @@ h1::after {
   transform: translateZ(0);
 }
 
+body.use-static-avatar .rina-live2d {
+  background:
+    url("./images/Rina_head.png") center / cover no-repeat,
+    rgba(255, 255, 255, 0.18);
+  animation: none !important;
+}
+
 @keyframes rinaSpriteBlink {
   0%, 86.99%, 94%, 100% { background-position: 0 0, 0 0; }
   87%, 88.99% { background-position: 33.333% 0, 0 0; }
