@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Birthday SP Gacha</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="machine-zone" aria-labelledby="page-title">
+        <div class="top-strip">
+          <span>2000s Birthday SP</span>
+          <span>offline web gacha</span>
+        </div>
+
+        <div class="stage">
+          <section class="poster-panel">
+            <p class="kicker">Millennium Idol Lottery</p>
+            <h1 id="page-title">生日 SP 扭蛋抽奖</h1>
+            <p class="subcopy">点击按钮，让镭射胶囊转出来。纯本地网页，不需要服务器，适合直接发给朋友打开玩。</p>
+            <div class="quick-stats" aria-label="抽奖信息">
+              <span><b id="remaining-count">12</b> 个奖品</span>
+              <span><b id="draw-count">0</b> 次抽取</span>
+            </div>
+          </section>
+
+          <section class="gacha-card" aria-label="扭蛋机">
+            <div class="machine">
+              <div class="marquee">
+                <span>Happy</span>
+                <span>Birthday</span>
+                <span>SP</span>
+              </div>
+              <div class="glass">
+                <div class="capsules" aria-hidden="true">
+                  <span class="capsule cap-1"></span>
+                  <span class="capsule cap-2"></span>
+                  <span class="capsule cap-3"></span>
+                  <span class="capsule cap-4"></span>
+                  <span class="capsule cap-5"></span>
+                  <span class="capsule cap-6"></span>
+                  <span class="capsule cap-7"></span>
+                  <span class="capsule cap-8"></span>
+                </div>
+                <div class="shine"></div>
+              </div>
+              <div class="body">
+                <div class="coin-slot">
+                  <span></span>
+                </div>
+                <button id="draw-button" class="draw-button" type="button">
+                  <span class="button-icon" aria-hidden="true">◆</span>
+                  <span>开始抽奖</span>
+                </button>
+                <div class="outlet" aria-hidden="true">
+                  <span id="drop-capsule" class="drop-capsule"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="prize-board" aria-label="奖品列表">
+          <div class="section-title">
+            <h2>奖品池</h2>
+            <button id="reset-button" class="icon-button" type="button" title="清空本机记录" aria-label="清空本机记录">↺</button>
+          </div>
+          <div id="prize-list" class="prize-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="result-dialog" class="result-dialog" aria-labelledby="result-title">
+      <div class="result-window">
+        <div class="dialog-bar">
+          <span>gacha_result.exe</span>
+          <button id="close-dialog" class="window-button" type="button" aria-label="关闭">×</button>
+        </div>
+        <div class="result-content">
+          <p class="result-label">你抽中了</p>
+          <h2 id="result-title">奖品名称</h2>
+          <p id="result-desc"></p>
+          <div id="result-rarity" class="rarity-chip"></div>
+          <button id="again-button" class="secondary-button" type="button">再抽一次</button>
+        </div>
+      </div>
+    </dialog>
+
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+    <script src="./script.js"></script>
+  </body>
+</html>
