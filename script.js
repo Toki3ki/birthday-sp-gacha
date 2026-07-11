@@ -1,24 +1,25 @@
 const prizes = [
-  { name: "手写拍立得", desc: "当天现场随机签一张，适合收藏到手机壳背面。", rarity: "SSR", weight: 4 },
-  { name: "生日 SP 合照券", desc: "演出后限定一张合照，姿势可以现场指定。", rarity: "SR", weight: 7 },
-  { name: "点歌小纸条", desc: "下次练习或直播时，从纸条里选一首唱。", rarity: "SR", weight: 8 },
-  { name: "千禧贴纸包", desc: "镭射、星星、像素风混装，抽到就很有仪式感。", rarity: "R", weight: 14 },
-  { name: "专属语音晚安", desc: "十秒以内，甜度自行调节。", rarity: "SSR", weight: 3 },
-  { name: "应援色发绳", desc: "可以当手环，也可以挂在包上。", rarity: "R", weight: 13 },
-  { name: "便利店饮料券", desc: "演出后一起去买，预算学生友好。", rarity: "R", weight: 13 },
-  { name: "隐藏留言卡", desc: "现场抽一张密封留言，内容只给中奖的人看。", rarity: "SR", weight: 8 },
-  { name: "再来一次", desc: "命运说你可以多转一圈。", rarity: "N", weight: 10 },
-  { name: "生日祝福弹幕", desc: "把你的祝福写进当天展示页。", rarity: "R", weight: 12 },
-  { name: "小零食补给", desc: "随机糖果或饼干，快乐一点点加满。", rarity: "N", weight: 16 },
-  { name: "神秘签名物", desc: "现场从准备好的小物里盲抽一个。", rarity: "SSR", weight: 2 }
+  { name: "\u624b\u5199\u62cd\u7acb\u5f97", desc: "\u5f53\u5929\u73b0\u573a\u968f\u673a\u7b7e\u4e00\u5f20\uff0c\u9002\u5408\u6536\u85cf\u5230\u624b\u673a\u58f3\u80cc\u9762\u3002", rarity: "SSR", weight: 4 },
+  { name: "\u751f\u65e5 SP \u5408\u7167\u5238", desc: "\u6f14\u51fa\u540e\u9650\u5b9a\u4e00\u5f20\u5408\u7167\uff0c\u59ff\u52bf\u53ef\u4ee5\u73b0\u573a\u6307\u5b9a\u3002", rarity: "SR", weight: 7 },
+  { name: "\u70b9\u6b4c\u5c0f\u7eb8\u6761", desc: "\u4e0b\u6b21\u7ec3\u4e60\u6216\u76f4\u64ad\u65f6\uff0c\u4ece\u7eb8\u6761\u91cc\u9009\u4e00\u9996\u5531\u3002", rarity: "SR", weight: 8 },
+  { name: "\u5343\u79a7\u8d34\u7eb8\u5305", desc: "\u956d\u5c04\u3001\u661f\u661f\u3001\u50cf\u7d20\u98ce\u6df7\u88c5\uff0c\u62bd\u5230\u5c31\u5f88\u6709\u4eea\u5f0f\u611f\u3002", rarity: "R", weight: 14 },
+  { name: "\u4e13\u5c5e\u8bed\u97f3\u665a\u5b89", desc: "\u5341\u79d2\u4ee5\u5185\uff0c\u751c\u5ea6\u81ea\u884c\u8c03\u8282\u3002", rarity: "SSR", weight: 3 },
+  { name: "\u5e94\u63f4\u8272\u53d1\u7ef3", desc: "\u53ef\u4ee5\u5f53\u624b\u73af\uff0c\u4e5f\u53ef\u4ee5\u6302\u5728\u5305\u4e0a\u3002", rarity: "R", weight: 13 },
+  { name: "\u4fbf\u5229\u5e97\u996e\u6599\u5238", desc: "\u6f14\u51fa\u540e\u4e00\u8d77\u53bb\u4e70\uff0c\u9884\u7b97\u5b66\u751f\u53cb\u597d\u3002", rarity: "R", weight: 13 },
+  { name: "\u9690\u85cf\u7559\u8a00\u5361", desc: "\u73b0\u573a\u62bd\u4e00\u5f20\u5bc6\u5c01\u7559\u8a00\uff0c\u5185\u5bb9\u53ea\u7ed9\u4e2d\u5956\u7684\u4eba\u770b\u3002", rarity: "SR", weight: 8 },
+  { name: "\u518d\u6765\u4e00\u6b21", desc: "\u547d\u8fd0\u8bf4\u4f60\u53ef\u4ee5\u591a\u8f6c\u4e00\u5708\u3002", rarity: "N", weight: 10 },
+  { name: "\u751f\u65e5\u795d\u798f\u5f39\u5e55", desc: "\u628a\u4f60\u7684\u795d\u798f\u5199\u8fdb\u5f53\u5929\u5c55\u793a\u9875\u3002", rarity: "R", weight: 12 },
+  { name: "\u5c0f\u96f6\u98df\u8865\u7ed9", desc: "\u968f\u673a\u7cd6\u679c\u6216\u997c\u5e72\uff0c\u5feb\u4e50\u4e00\u70b9\u70b9\u52a0\u6ee1\u3002", rarity: "N", weight: 16 },
+  { name: "\u795e\u79d8\u7b7e\u540d\u7269", desc: "\u73b0\u573a\u4ece\u51c6\u5907\u597d\u7684\u5c0f\u7269\u91cc\u76f2\u62bd\u4e00\u4e2a\u3002", rarity: "SSR", weight: 2 }
 ];
+
 const STORAGE_KEY = "birthday-sp-gacha-history-v1";
 const MAX_DISC_MESSAGE = 18;
-const DEFAULT_DISC_MESSAGE = "Rina生日快乐";
+const DEFAULT_DISC_MESSAGE = "\u0052\u0069\u006e\u0061\u751f\u65e5\u5feb\u4e50";
 const PREVIEW_DURATION = 1620;
 const READ_DURATION = 1050;
 const SPIN_DURATION = 2400;
-const DROP_DURATION = 760;
+const DROP_DURATION = 1180;
 const DISC_STYLES = ["disc-princess", "disc-melody", "disc-collage", "disc-lime", "disc-aqua", "disc-doodle"];
 
 const machine = document.querySelector(".machine");
@@ -44,6 +45,14 @@ const discMessageInput = document.querySelector("#disc-message");
 const discMessageCount = document.querySelector("#disc-message-count");
 const capsulesLayer = document.querySelector(".capsules");
 const capsuleEls = [...document.querySelectorAll(".capsule")];
+const domeScene = document.querySelector("#dome-scene");
+const glassDome = document.querySelector(".glass");
+const parallaxLayers = [
+  { element: document.querySelector(".stage-bg"), x: 2, y: 8, rotate: 0 },
+  { element: document.querySelector(".stage-rig"), x: 3, y: 12, rotate: 0.25 },
+  { element: document.querySelector(".stage-platform"), x: 4, y: 18, rotate: 0.35 },
+  { element: document.querySelector(".stage-idol"), x: 6, y: 26, rotate: 0.65 }
+].filter((layer) => layer.element);
 const canvas = document.querySelector("#confetti-canvas");
 const ctx = canvas.getContext("2d");
 
@@ -58,6 +67,12 @@ let audioContext = null;
 let audioUnlocked = false;
 let soundMuted = localStorage.getItem("birthday-sp-gacha-muted") === "true";
 let turnLocked = false;
+let parallaxFrame = null;
+let targetScrollParallax = 0;
+let currentScrollParallax = 0;
+let pointerParallaxX = 0;
+let pointerParallaxY = 0;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function loadHistory() {
   try {
@@ -134,6 +149,8 @@ function renderCapsules() {
     state.element.style.setProperty("--py", `${py.toFixed(1)}px`);
     state.element.style.setProperty("--angle", `${state.angle.toFixed(1)}deg`);
     state.element.style.setProperty("--scale", scale.toFixed(3));
+    state.element.style.setProperty("--holo-angle", `${(state.angle * 0.72 + state.depth * 26).toFixed(1)}deg`);
+    state.element.style.setProperty("--spec-angle", `${(state.angle * -0.38 + 118 + state.depth * 18).toFixed(1)}deg`);
   });
 }
 
@@ -409,7 +426,7 @@ function renderPrizes() {
       const isWon = wonNames.has(prize.name);
       return `
         <article class="prize-item ${isWon ? "is-won" : ""}">
-          <span class="prize-tag">${prize.rarity}${isWon ? " / 已抽到" : ""}</span>
+          <span class="prize-tag">${prize.rarity}${isWon ? " / \u5df2\u62bd\u5230" : ""}</span>
           <h3>${prize.name}</h3>
           <p>${prize.desc}</p>
         </article>
@@ -431,65 +448,86 @@ function choosePrize() {
 }
 
 function setButtonText(text) {
-  drawButton.querySelector("span:last-child").textContent = text;
+  const label = drawButton.querySelector(".button-label") || drawButton.lastElementChild;
+  if (label) label.textContent = text;
+}
+
+function resetMachineState() {
+  machine.classList.remove("previewing", "coining", "reading", "syncing", "cranking", "spinning", "dropping", "physics-pop", "finale", "finale-ssr", "finale-sr", "finale-r");
+  discPreview.classList.remove("is-active");
+  machine.dataset.phase = "";
+  turnLocked = false;
+  drawButton.disabled = false;
+  updateSpinMeter();
+  setButtonText("\u653e\u5165\u5149\u76d8");
 }
 
 function drawPrize() {
   if (turnLocked) return;
 
-  unlockAudio();
-  playSfx("press");
-  turnLocked = true;
-  updateSpinMeter();
-  randomizeDiscStyle();
-  syncDiscMessage();
-  coinCount.textContent = "LOAD";
-  setButtonText("刻录光盘中");
-  drawButton.disabled = true;
+  try {
+    unlockAudio();
+    playSfx("press");
+    turnLocked = true;
+    updateSpinMeter();
+    randomizeDiscStyle();
+    syncDiscMessage();
+    coinCount.textContent = "LOAD";
+    machine.dataset.phase = "INSERT DISC";
+    setButtonText("\u523b\u5f55\u5149\u76d8\u4e2d");
+    drawButton.disabled = true;
 
-  machine.classList.remove("previewing", "coining", "reading", "cranking", "spinning", "dropping", "physics-pop");
-  discPreview.classList.remove("is-active");
-  void machine.offsetWidth;
-  machine.classList.add("previewing");
-  discPreview.classList.add("is-active");
+    machine.classList.remove("previewing", "coining", "reading", "syncing", "cranking", "spinning", "dropping", "physics-pop", "finale", "finale-ssr", "finale-sr", "finale-r");
+    discPreview.classList.remove("is-active");
+    void machine.offsetWidth;
+    machine.classList.add("previewing");
+    discPreview.classList.add("is-active");
 
-  window.setTimeout(() => {
-    playSfx("read");
-    setButtonText("读取光盘中");
-    machine.classList.remove("previewing");
-    machine.classList.add("coining", "reading");
-  }, PREVIEW_DURATION);
+    window.setTimeout(() => {
+      playSfx("read");
+      coinCount.textContent = "READ";
+      machine.dataset.phase = "READING DISC";
+      setButtonText("\u8bfb\u53d6\u5149\u76d8\u4e2d");
+      machine.classList.remove("previewing");
+      machine.classList.add("coining", "reading");
+    }, PREVIEW_DURATION);
 
-  window.setTimeout(() => {
-    playSfx("spin");
-    coinCount.textContent = "PLAY";
-    setButtonText("扭蛋启动中");
-    machine.classList.remove("coining");
-    machine.classList.add("cranking", "spinning");
+    window.setTimeout(() => {
+      playSfx("spin");
+      coinCount.textContent = "SYNC";
+      machine.dataset.phase = "SYNCING GACHA";
+      setButtonText("\u540c\u6b65\u626d\u86cb\u4e2d");
+      machine.classList.remove("coining");
+      machine.classList.add("syncing", "cranking", "spinning");
 
-    runCapsulePhysics().then(() => {
-      playSfx("drop");
-      machine.classList.remove("reading", "cranking", "spinning");
-      void machine.offsetWidth;
-      machine.classList.add("dropping");
-      setButtonText("出蛋中");
+      runCapsulePhysics()
+        .then(() => {
+          const prize = choosePrize();
+          const finaleClass = prize.rarity === "SSR" ? "finale-ssr" : prize.rarity === "SR" ? "finale-sr" : "finale-r";
+          playSfx("drop");
+          coinCount.textContent = "DROP";
+          machine.dataset.phase = "CAPSULE DROP";
+          machine.classList.remove("reading", "syncing", "cranking", "spinning");
+          void machine.offsetWidth;
+          machine.classList.add("dropping", "finale", finaleClass);
+          setButtonText("\u51fa\u86cb\u4e2d");
 
-      window.setTimeout(() => {
-        const prize = choosePrize();
-        history.unshift({ ...prize, time: new Date().toISOString() });
-        saveHistory();
-        renderPrizes();
-        showResult(prize);
-        machine.classList.remove("dropping");
-        discPreview.classList.remove("is-active");
-        turnLocked = false;
-        drawButton.disabled = false;
-        updateSpinMeter();
-        setButtonText("放入光盘");
-      }, DROP_DURATION);
-    });
-  }, PREVIEW_DURATION + READ_DURATION);
+          window.setTimeout(() => {
+            history.unshift({ ...prize, time: new Date().toISOString() });
+            saveHistory();
+            renderPrizes();
+            showResult(prize);
+            resetMachineState();
+          }, DROP_DURATION);
+        })
+        .catch(resetMachineState);
+    }, PREVIEW_DURATION + READ_DURATION);
+  } catch (error) {
+    console.error(error);
+    resetMachineState();
+  }
 }
+
 function showResult(prize) {
   resultTitle.textContent = prize.name;
   resultDesc.textContent = prize.desc;
@@ -561,6 +599,46 @@ function animateConfetti() {
   }
 }
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function updateDomeParallaxTarget() {
+  if (reduceMotion || !glassDome) return;
+  const rect = glassDome.getBoundingClientRect();
+  const centerOffset = rect.top + rect.height * 0.5 - window.innerHeight * 0.5;
+  targetScrollParallax = clamp(-centerOffset / (window.innerHeight * 0.72), -1, 1);
+}
+
+function renderDomeParallax() {
+  if (reduceMotion) return;
+
+  currentScrollParallax += (targetScrollParallax - currentScrollParallax) * 0.08;
+
+  parallaxLayers.forEach((layer) => {
+    const x = currentScrollParallax * layer.x + pointerParallaxX * layer.x * 0.36;
+    const y = currentScrollParallax * layer.y + pointerParallaxY * layer.y * 0.2;
+    const rotate = currentScrollParallax * layer.rotate + pointerParallaxX * layer.rotate * 0.45;
+    layer.element.style.setProperty("--plx", `${x.toFixed(2)}px`);
+    layer.element.style.setProperty("--ply", `${y.toFixed(2)}px`);
+    layer.element.style.setProperty("--plr", `${rotate.toFixed(3)}deg`);
+  });
+
+  parallaxFrame = requestAnimationFrame(renderDomeParallax);
+}
+
+function handleDomePointer(event) {
+  if (reduceMotion || !glassDome) return;
+  const rect = glassDome.getBoundingClientRect();
+  pointerParallaxX = clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
+  pointerParallaxY = clamp(((event.clientY - rect.top) / rect.height - 0.5) * 2, -1, 1);
+}
+
+function resetDomePointer() {
+  pointerParallaxX = 0;
+  pointerParallaxY = 0;
+}
+
 drawButton.addEventListener("click", drawPrize);
 discMessageInput.addEventListener("input", syncDiscMessage);
 againButton.addEventListener("click", () => {
@@ -583,7 +661,16 @@ document.addEventListener("touchend", unlockAudio, { passive: true });
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden && audioContext?.state === "suspended") unlockAudio();
 });
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener("scroll", updateDomeParallaxTarget, { passive: true });
+window.addEventListener("resize", () => {
+  resizeCanvas();
+  updateDomeParallaxTarget();
+});
+glassDome?.addEventListener("pointermove", handleDomePointer);
+glassDome?.addEventListener("pointerleave", resetDomePointer);
+window.addEventListener("beforeunload", () => {
+  if (parallaxFrame) cancelAnimationFrame(parallaxFrame);
+});
 
 setDiscStyle(DISC_STYLES[0]);
 syncDiscMessage();
@@ -591,3 +678,5 @@ syncSoundToggle();
 updateSpinMeter();
 renderPrizes();
 resizeCanvas();
+updateDomeParallaxTarget();
+renderDomeParallax();

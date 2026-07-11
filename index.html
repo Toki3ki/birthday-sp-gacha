@@ -18,7 +18,7 @@
       <span class="track-label t3">RINA.exe</span>
     </div>
     <div id="disc-preview" class="disc-preview cd-disc" aria-hidden="true">
-      <span class="disc-text">Rina生日快乐</span>
+      <span class="disc-text">&#82;&#105;&#110;&#97;&#29983;&#26085;&#24555;&#20048;</span>
     </div>
     <main class="app-shell">
       <section class="machine-zone" aria-labelledby="page-title">
@@ -32,16 +32,25 @@
 
         <div class="stage">
           <section class="poster-panel">
+            <figure class="rina-card" aria-label="Rina character card">
+              <div class="rina-live2d" role="img" aria-label="Rina character design">
+                <img class="head-frame frame-1" src="./images/head_frame1.png" alt="" />
+                <img class="head-frame frame-2" src="./images/head_frame2.png" alt="" />
+                <img class="head-frame frame-3" src="./images/head_frame3.png" alt="" />
+                <img class="head-frame frame-4" src="./images/head_frame4.png" alt="" />
+              </div>
+              <figcaption>RINA.exe / avatar loaded</figcaption>
+            </figure>
             <p class="kicker">Y2K Concert Toy System</p>
             <h1 id="page-title">Rina Birthday SP</h1>
-            <p class="subcopy">把给 Rina 的祝福刻进限定光盘，推入唱片机关，透明音乐玩具开始旋转，最后掉出一颗生日扭蛋。</p>
-            <div class="quick-stats" aria-label="抽奖信息">
-              <span><b id="remaining-count">12</b> 个奖品</span>
-              <span><b id="draw-count">0</b> 次抽取</span>
+            <p class="subcopy">&#25226;&#32473; Rina &#30340;&#31069;&#31119;&#21051;&#36827;&#38480;&#23450;&#20809;&#30424;&#65292;&#25512;&#20837;&#21809;&#29255;&#26426;&#20851;&#65292;&#36879;&#26126;&#38899;&#20048;&#29609;&#20855;&#24320;&#22987;&#26059;&#36716;&#65292;&#26368;&#21518;&#25481;&#20986;&#19968;&#39063;&#29983;&#26085;&#25197;&#34507;&#12290;</p>
+            <div class="quick-stats" aria-label="&#25277;&#22870;&#20449;&#24687;">
+              <span><b id="remaining-count">12</b> &#20010;&#22870;&#21697;</span>
+              <span><b id="draw-count">0</b> &#27425;&#25277;&#21462;</span>
             </div>
           </section>
 
-          <section class="gacha-card" aria-label="光盘触发扭蛋机">
+          <section class="gacha-card" aria-label="&#20809;&#30424;&#35302;&#21457;&#25197;&#34507;&#26426;">
             <div class="machine">
               <div class="kitty-topper" aria-hidden="true">
                 <span class="kitty-ear left"></span>
@@ -65,6 +74,13 @@
               <div class="coin-meter" aria-live="polite">
                 <span>Disc Drive</span>
                 <b id="coin-count">READY</b>
+                <div class="mini-eq" aria-hidden="true">
+                  <i></i>
+                  <i></i>
+                  <i></i>
+                  <i></i>
+                  <i></i>
+                </div>
                 <div class="coin-pips" aria-hidden="true">
                   <span></span>
                   <span></span>
@@ -79,7 +95,19 @@
                   <span class="sticker candy"></span>
                   <span class="sticker icecream"></span>
                 </div>
+                <div class="dome-scene" id="dome-scene" aria-hidden="true">
+                  <div class="parallax-layer stage-bg"></div>
+                  <div class="parallax-layer stage-rig"></div>
+                  <div class="parallax-layer stage-platform"></div>
+                  <div class="parallax-layer stage-idol">
+                    <span class="idol-head"></span>
+                    <span class="idol-body"></span>
+                    <span class="idol-mic"></span>
+                  </div>
+                </div>
                 <div class="kitty-label" aria-hidden="true">RINA LIVE</div>
+                <div class="sync-ring" aria-hidden="true"></div>
+                <div class="laser-line" aria-hidden="true"></div>
                 <div class="capsules" aria-hidden="true">
                   <span class="capsule cap-1"></span>
                   <span class="capsule cap-2"></span>
@@ -108,26 +136,32 @@
                 </div>
                 <div class="shine"></div>
               </div>
+              <div class="turntable-base" aria-hidden="true">
+                <span class="turntable-ring"></span>
+                <span class="turntable-axis"></span>
+                <span class="turntable-title">RINA LIVE</span>
+              </div>
               <div class="body">
                 <div class="disc-message-panel">
-                  <label for="disc-message">刻到光盘上的一句话</label>
+                  <label for="disc-message">&#21051;&#21040;&#20809;&#30424;&#19978;&#30340;&#19968;&#21477;&#35805;</label>
                   <div class="disc-message-row">
-                    <input id="disc-message" type="text" maxlength="18" value="Rina生日快乐" autocomplete="off" />
+                    <input id="disc-message" type="text" maxlength="18" value="&#82;&#105;&#110;&#97;&#29983;&#26085;&#24555;&#20048;" autocomplete="off" />
                     <span id="disc-message-count">0/18</span>
                   </div>
                 </div>
                 <div class="coin-slot cd-drive" aria-hidden="true">
                   <span class="slot-line"></span>
-                  <span class="coin cd-disc"><span class="disc-text">Rina生日快乐</span></span>
+                  <span class="coin cd-disc"><span class="disc-text">&#82;&#105;&#110;&#97;&#29983;&#26085;&#24555;&#20048;</span></span>
                 </div>
                 <button id="draw-button" class="draw-button" type="button">
-                  <span class="button-icon" aria-hidden="true">◆</span>
-                  <span>放入光盘</span>
+                  <span class="button-icon" aria-hidden="true">&#9670;</span>
+                  <span class="button-label">&#25918;&#20837;&#20809;&#30424;</span>
                 </button>
                 <div class="turn-knob cd-reader" aria-hidden="true">
                   <span></span>
                 </div>
                 <div class="outlet" aria-hidden="true">
+                  <span class="outlet-flap"></span>
                   <span id="drop-capsule" class="drop-capsule"></span>
                 </div>
               </div>
@@ -135,10 +169,10 @@
           </section>
         </div>
 
-        <section class="prize-board" aria-label="奖品列表">
+        <section class="prize-board" aria-label="&#22870;&#21697;&#21015;&#34920;">
           <div class="section-title">
-            <h2>奖品池</h2>
-            <button id="reset-button" class="icon-button" type="button" title="清空本机记录" aria-label="清空本机记录">↻</button>
+            <h2>&#22870;&#21697;&#27744;</h2>
+            <button id="reset-button" class="icon-button" type="button" title="&#28165;&#31354;&#26412;&#26426;&#35760;&#24405;" aria-label="&#28165;&#31354;&#26412;&#26426;&#35760;&#24405;">&#8635;</button>
           </div>
           <div id="prize-list" class="prize-list"></div>
         </section>
@@ -149,14 +183,18 @@
       <div class="result-window">
         <div class="dialog-bar">
           <span>gacha_result.exe</span>
-          <button id="close-dialog" class="window-button" type="button" aria-label="关闭">×</button>
+          <button id="close-dialog" class="window-button" type="button" aria-label="&#20851;&#38381;">&times;</button>
         </div>
         <div class="result-content">
-          <p class="result-label">你抽中了</p>
-          <h2 id="result-title">奖品名称</h2>
+          <div class="reward-visual" aria-hidden="true">
+            <span class="reward-ticket">RINA SP</span>
+            <span class="reward-bubble">LOVE</span>
+          </div>
+          <p class="result-label">&#20320;&#25277;&#20013;&#20102;</p>
+          <h2 id="result-title">&#22870;&#21697;&#21517;&#31216;</h2>
           <p id="result-desc"></p>
           <div id="result-rarity" class="rarity-chip"></div>
-          <button id="again-button" class="secondary-button" type="button">再放一次</button>
+          <button id="again-button" class="secondary-button" type="button">&#20877;&#25918;&#19968;&#27425;</button>
         </div>
       </div>
     </dialog>
