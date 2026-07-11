@@ -19,6 +19,7 @@ const drawButton = document.querySelector("#draw-button");
 const againButton = document.querySelector("#again-button");
 const resetButton = document.querySelector("#reset-button");
 const closeDialog = document.querySelector("#close-dialog");
+const soundToggle = document.querySelector("#sound-toggle");
 const dialog = document.querySelector("#result-dialog");
 const prizeList = document.querySelector("#prize-list");
 const remainingCount = document.querySelector("#remaining-count");
@@ -32,6 +33,8 @@ const ctx = canvas.getContext("2d");
 let history = loadHistory();
 let confetti = [];
 let animationFrame = null;
+let audioContext = null;
+let soundMuted = localStorage.getItem("birthday-sp-gacha-muted") === "true";
 
 function loadHistory() {
   try {
@@ -43,6 +46,98 @@ function loadHistory() {
 
 function saveHistory() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+}
+
+function syncSoundToggle() {
+  soundToggle.textContent = soundMuted ? "SFX OFF" : "SFX ON";
+  soundToggle.setAttribute("aria-pressed", String(soundMuted));
+}
+
+function getAudioContext() {
+  if (soundMuted) return null;
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+  return audioContext;
+}
+
+function playTone({ frequency, duration = 0.08, delay = 0, type = "square", volume = 0.05, slideTo }) {
+  const audio = getAudioContext();
+  if (!audio) return;
+
+  const start = audio.currentTime + delay;
+  const oscillator = audio.createOscillator();
+  const gain = audio.createGain();
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  if (slideTo) {
+    oscillator.frequency.exponentialRampToValueAtTime(slideTo, start + duration);
+  }
+
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+  oscillator.connect(gain);
+  gain.connect(audio.destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.02);
+}
+
+function playNoise({ duration = 0.12, delay = 0, volume = 0.035 }) {
+  const audio = getAudioContext();
+  if (!audio) return;
+
+  const start = audio.currentTime + delay;
+  const samples = Math.max(1, Math.floor(audio.sampleRate * duration));
+  const buffer = audio.createBuffer(1, samples, audio.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  for (let index = 0; index < samples; index += 1) {
+    data[index] = (Math.random() * 2 - 1) * (1 - index / samples);
+  }
+
+  const source = audio.createBufferSource();
+  const gain = audio.createGain();
+  source.buffer = buffer;
+  gain.gain.setValueAtTime(volume, start);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  source.connect(gain);
+  gain.connect(audio.destination);
+  source.start(start);
+}
+
+function playSfx(name) {
+  if (name === "press") {
+    playTone({ frequency: 220, slideTo: 440, duration: 0.08, volume: 0.045 });
+    playTone({ frequency: 660, duration: 0.05, delay: 0.075, volume: 0.035 });
+  }
+
+  if (name === "spin") {
+    [330, 392, 494, 392, 587, 494].forEach((frequency, index) => {
+      playTone({ frequency, duration: 0.055, delay: index * 0.085, volume: 0.032 });
+    });
+  }
+
+  if (name === "drop") {
+    playNoise({ duration: 0.08, volume: 0.025 });
+    playTone({ frequency: 176, slideTo: 88, duration: 0.16, delay: 0.02, volume: 0.05 });
+  }
+
+  if (name === "win") {
+    [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
+      playTone({ frequency, duration: 0.11, delay: 0.16 + index * 0.09, volume: 0.05 });
+    });
+    playTone({ frequency: 1567.98, duration: 0.16, delay: 0.54, volume: 0.035 });
+  }
+
+  if (name === "reset") {
+    playTone({ frequency: 392, slideTo: 196, duration: 0.14, volume: 0.035 });
+  }
 }
 
 function renderPrizes() {
@@ -77,6 +172,8 @@ function choosePrize() {
 function drawPrize() {
   if (drawButton.disabled) return;
 
+  playSfx("press");
+  playSfx("spin");
   drawButton.disabled = true;
   drawButton.querySelector("span:last-child").textContent = "转动中";
   machine.classList.remove("dropping");
@@ -87,6 +184,7 @@ function drawPrize() {
     history.unshift({ ...prize, time: new Date().toISOString() });
     saveHistory();
     renderPrizes();
+    playSfx("drop");
     showResult(prize);
     machine.classList.remove("spinning");
     machine.classList.add("dropping");
@@ -100,10 +198,12 @@ function showResult(prize) {
   resultDesc.textContent = prize.desc;
   resultRarity.textContent = `${prize.rarity} Prize`;
   if (!dialog.open) dialog.showModal();
+  playSfx("win");
   burstConfetti();
 }
 
 function resetHistory() {
+  playSfx("reset");
   history = [];
   saveHistory();
   renderPrizes();
@@ -172,7 +272,14 @@ againButton.addEventListener("click", () => {
 });
 closeDialog.addEventListener("click", () => dialog.close());
 resetButton.addEventListener("click", resetHistory);
+soundToggle.addEventListener("click", () => {
+  soundMuted = !soundMuted;
+  localStorage.setItem("birthday-sp-gacha-muted", String(soundMuted));
+  syncSoundToggle();
+  if (!soundMuted) playSfx("press");
+});
 window.addEventListener("resize", resizeCanvas);
 
+syncSoundToggle();
 renderPrizes();
 resizeCanvas();
