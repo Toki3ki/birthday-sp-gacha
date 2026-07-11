@@ -34,6 +34,7 @@ let history = loadHistory();
 let confetti = [];
 let animationFrame = null;
 let audioContext = null;
+let audioUnlocked = false;
 let soundMuted = localStorage.getItem("birthday-sp-gacha-muted") === "true";
 
 function loadHistory() {
@@ -58,15 +59,36 @@ function getAudioContext() {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
-  }
   return audioContext;
+}
+
+function unlockAudio() {
+  const audio = getAudioContext();
+  if (!audio) return;
+
+  if (audio.state === "suspended") {
+    audio.resume();
+  }
+
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  const buffer = audio.createBuffer(1, 1, audio.sampleRate);
+  const source = audio.createBufferSource();
+  const gain = audio.createGain();
+  gain.gain.value = 0.0001;
+  source.buffer = buffer;
+  source.connect(gain);
+  gain.connect(audio.destination);
+  source.start(0);
 }
 
 function playTone({ frequency, duration = 0.08, delay = 0, type = "square", volume = 0.05, slideTo }) {
   const audio = getAudioContext();
   if (!audio) return;
+  if (audio.state === "suspended") {
+    audio.resume();
+  }
 
   const start = audio.currentTime + delay;
   const oscillator = audio.createOscillator();
@@ -91,6 +113,9 @@ function playTone({ frequency, duration = 0.08, delay = 0, type = "square", volu
 function playNoise({ duration = 0.12, delay = 0, volume = 0.035 }) {
   const audio = getAudioContext();
   if (!audio) return;
+  if (audio.state === "suspended") {
+    audio.resume();
+  }
 
   const start = audio.currentTime + delay;
   const samples = Math.max(1, Math.floor(audio.sampleRate * duration));
@@ -172,6 +197,7 @@ function choosePrize() {
 function drawPrize() {
   if (drawButton.disabled) return;
 
+  unlockAudio();
   playSfx("press");
   playSfx("spin");
   drawButton.disabled = true;
@@ -276,7 +302,17 @@ soundToggle.addEventListener("click", () => {
   soundMuted = !soundMuted;
   localStorage.setItem("birthday-sp-gacha-muted", String(soundMuted));
   syncSoundToggle();
-  if (!soundMuted) playSfx("press");
+  if (!soundMuted) {
+    unlockAudio();
+    playSfx("press");
+  }
+});
+document.addEventListener("pointerdown", unlockAudio, { passive: true });
+document.addEventListener("touchend", unlockAudio, { passive: true });
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && audioContext?.state === "suspended") {
+    unlockAudio();
+  }
 });
 window.addEventListener("resize", resizeCanvas);
 
