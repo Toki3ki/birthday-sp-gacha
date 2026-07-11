@@ -21,7 +21,26 @@ const READ_DURATION = 1050;
 const SPIN_DURATION = 2400;
 const DROP_DURATION = 1180;
 const DISC_STYLES = ["disc-princess", "disc-melody", "disc-collage", "disc-lime", "disc-aqua", "disc-doodle"];
+const BOOT_ASSETS = [
+  "./images/rina_blink_sprite.webp",
+  "./images/head_frame1.png",
+  "./images/head_frame2.png",
+  "./images/head_frame3.png",
+  "./images/head_frame4.png",
+  "./images/disc-princess.png",
+  "./images/disc-melody.png",
+  "./images/disc-collage.png",
+  "./images/disc-lime.png",
+  "./images/disc-aqua.png",
+  "./images/disc-doodle.png"
+];
+const BOOT_READY_DELAY = 400;
+const BOOT_FADE_DELAY = 460;
 
+const bootLoader = document.querySelector("#boot-loader");
+const bootProgressBar = document.querySelector("#boot-progress-bar");
+const bootPercent = document.querySelector("#boot-percent");
+const bootStatus = document.querySelector("#boot-status");
 const machine = document.querySelector(".machine");
 const drawButton = document.querySelector("#draw-button");
 const againButton = document.querySelector("#again-button");
@@ -74,6 +93,75 @@ let pointerParallaxX = 0;
 let pointerParallaxY = 0;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const lowPowerTouch = window.matchMedia("(pointer: coarse), (max-width: 820px)").matches;
+
+function updateBootProgress(done, total, label = "preloading assets") {
+  if (!bootLoader) return;
+  const percent = total ? Math.round((done / total) * 100) : 100;
+  bootProgressBar.style.width = `${percent}%`;
+  bootPercent.textContent = `${percent}%`;
+  bootStatus.textContent = label;
+}
+
+function preloadBootAsset(src) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    const finish = () => resolve(src);
+    image.onload = () => {
+      if (image.decode) {
+        image.decode().then(finish).catch(finish);
+      } else {
+        finish();
+      }
+    };
+    image.onerror = finish;
+    image.src = src;
+  });
+}
+
+function revealAppAfterBoot() {
+  if (!bootLoader) {
+    document.body.classList.remove("is-loading");
+    return;
+  }
+  bootStatus.textContent = "RINA SYSTEM READY";
+  bootPercent.textContent = "100%";
+  bootProgressBar.style.width = "100%";
+  bootLoader.classList.add("is-ready");
+  window.setTimeout(() => {
+    document.body.classList.remove("is-loading");
+    bootLoader.classList.add("is-hidden");
+    window.setTimeout(() => bootLoader.remove(), BOOT_FADE_DELAY);
+  }, BOOT_READY_DELAY);
+}
+
+function startBootLoader() {
+  let alreadyReady = false;
+  try {
+    alreadyReady = sessionStorage.getItem("rina-system-ready") === "true";
+  } catch {
+    alreadyReady = false;
+  }
+
+  if (!bootLoader || alreadyReady) {
+    document.body.classList.remove("is-loading");
+    bootLoader?.remove();
+    return;
+  }
+
+  let completed = 0;
+  updateBootProgress(0, BOOT_ASSETS.length);
+  Promise.all(BOOT_ASSETS.map((src) => preloadBootAsset(src).then(() => {
+    completed += 1;
+    updateBootProgress(completed, BOOT_ASSETS.length, `loading ${src.split("/").pop()}`);
+  }))).then(() => {
+    try {
+      sessionStorage.setItem("rina-system-ready", "true");
+    } catch {
+      /* Session storage can be unavailable in strict private browsing. */
+    }
+    revealAppAfterBoot();
+  });
+}
 
 function loadHistory() {
   try {
@@ -690,6 +778,7 @@ window.addEventListener("beforeunload", () => {
   if (parallaxFrame) cancelAnimationFrame(parallaxFrame);
 });
 
+startBootLoader();
 setDiscStyle(DISC_STYLES[0]);
 syncDiscMessage();
 syncSoundToggle();

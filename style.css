@@ -60,6 +60,169 @@ body::after {
   mix-blend-mode: screen;
 }
 
+body.is-loading {
+  overflow: hidden;
+}
+
+body.is-loading .app-shell,
+body.is-loading .y2k-orbit,
+body.is-loading .disc-preview,
+body.is-loading #confetti-canvas {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.boot-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 28% 25%, rgba(255, 153, 224, .5), transparent 28%),
+    radial-gradient(circle at 72% 32%, rgba(122, 238, 255, .5), transparent 30%),
+    linear-gradient(135deg, rgba(255, 228, 250, .95), rgba(213, 246, 255, .93) 48%, rgba(229, 215, 255, .95));
+  transition: opacity .42s ease, visibility .42s ease;
+}
+
+.boot-loader.is-ready .boot-window {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.boot-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.boot-window {
+  width: min(520px, 92vw);
+  border: 2px solid rgba(42, 34, 58, .72);
+  border-radius: 22px;
+  color: #312942;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.7), rgba(255,255,255,.28)),
+    linear-gradient(118deg, rgba(255, 142, 218, .22), rgba(112, 239, 255, .2) 50%, rgba(166, 139, 255, .18));
+  box-shadow:
+    0 26px 70px rgba(119, 74, 144, .32),
+    inset 0 0 0 1px rgba(255,255,255,.72),
+    inset 0 0 34px rgba(255,255,255,.48);
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  transition: transform .32s ease;
+}
+
+.boot-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  background:
+    linear-gradient(90deg, rgba(255, 123, 211, .7), rgba(123, 239, 255, .62), rgba(178, 151, 255, .58));
+  border-bottom: 2px solid rgba(42, 34, 58, .55);
+}
+
+.boot-titlebar i {
+  width: 22px;
+  aspect-ratio: 1;
+  border: 2px solid rgba(42, 34, 58, .68);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #fff, #f4dcff 42%, #bba6ff);
+}
+
+.boot-content {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 26px 26px 20px;
+}
+
+.boot-disc {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.9);
+  background:
+    radial-gradient(circle, rgba(45, 39, 62, .9) 0 8%, rgba(235,239,250,.94) 8.8% 14%, transparent 15%),
+    linear-gradient(116deg, transparent 0 38%, rgba(255,255,255,.86) 44%, transparent 50%),
+    conic-gradient(from 24deg, #fbfdff, #dfe5f2, rgba(93,230,255,.46), #fbfdff, rgba(255,139,225,.42), #e3e6f0, rgba(171,151,255,.42), #fbfdff);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.72),
+    0 10px 24px rgba(111, 82, 143, .24);
+}
+
+.boot-kicker {
+  margin: 0 0 6px;
+  color: #ff5ccf;
+  font-size: .78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.boot-copy h1 {
+  margin: 0;
+  font-size: clamp(1.25rem, 6vw, 2.2rem);
+  line-height: 1.05;
+  color: #fff;
+  text-shadow:
+    2px 2px 0 #ff5ccf,
+    4px 4px 0 #54fff1,
+    0 0 18px rgba(255,255,255,.7);
+}
+
+.boot-copy p:last-child {
+  margin: 10px 0 0;
+  color: #665a77;
+  font-weight: 800;
+}
+
+.boot-progress {
+  height: 18px;
+  margin: 0 26px 16px;
+  padding: 3px;
+  border: 2px solid rgba(42, 34, 58, .7);
+  border-radius: 999px;
+  background: rgba(255,255,255,.46);
+  box-shadow: inset 0 2px 8px rgba(70, 47, 94, .18);
+}
+
+.boot-progress span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff75d2, #72f8ff, #fff16a, #b99cff);
+  transition: width .18s ease;
+}
+
+.boot-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 26px 22px;
+  color: #4f445f;
+  font-weight: 900;
+  letter-spacing: .03em;
+}
+
+@media (max-width: 520px) {
+  .boot-content {
+    grid-template-columns: 86px 1fr;
+    gap: 14px;
+    padding: 22px 18px 18px;
+  }
+
+  .boot-progress {
+    margin-inline: 18px;
+  }
+
+  .boot-footer {
+    padding-inline: 18px;
+  }
+}
+
 button {
   font: inherit;
 }

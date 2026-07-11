@@ -7,7 +7,30 @@
     <link rel="preload" as="image" href="./images/rina_blink_sprite.webp" fetchpriority="high" />
     <link rel="stylesheet" href="./style.css" />
   </head>
-  <body>
+  <body class="is-loading">
+    <div id="boot-loader" class="boot-loader" role="status" aria-live="polite" aria-label="Rina system loading">
+      <div class="boot-window">
+        <div class="boot-titlebar">
+          <span>RINA.exe</span>
+          <i></i>
+        </div>
+        <div class="boot-content">
+          <div class="boot-disc" aria-hidden="true"></div>
+          <div class="boot-copy">
+            <p class="boot-kicker">CD Birthday Loader</p>
+            <h1>Loading Birthday System...</h1>
+            <p id="boot-status">preloading assets</p>
+          </div>
+        </div>
+        <div class="boot-progress" aria-hidden="true">
+          <span id="boot-progress-bar"></span>
+        </div>
+        <div class="boot-footer">
+          <span id="boot-percent">0%</span>
+          <span>RINA SYSTEM</span>
+        </div>
+      </div>
+    </div>
     <div class="y2k-orbit" aria-hidden="true">
       <span class="spark s1"></span>
       <span class="spark s2"></span>
