@@ -5180,6 +5180,50 @@ body.use-static-avatar .rina-live2d {
 .cat-paw.left { left: 32px; transform: rotate(-8deg); }
 .cat-paw.right { right: 32px; transform: rotate(8deg); }
 
+/* Keep mixed Chinese/Latin copy stable on iOS Safari and in-app browsers. */
+.result-content,
+.result-content p,
+.result-content h2,
+.result-content button,
+.rarity-chip,
+.prize-item,
+.disc-message-panel,
+.disc-message-panel input {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+  font-synthesis: none;
+}
+
+.result-content h2 {
+  font-weight: 900;
+  letter-spacing: 0.015em;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .result-content h2 {
+    font-size: clamp(1.9rem, 9vw, 2.8rem);
+    line-height: 1.16;
+    letter-spacing: 0;
+    -webkit-text-stroke: 1px #24142f;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.42), 2px 2px 0 var(--hot), 4px 4px 0 rgba(84, 255, 241, 0.52);
+  }
+
+  .result-content p,
+  .result-label,
+  .rarity-chip,
+  .secondary-button,
+  .window-button {
+    letter-spacing: 0;
+    line-height: 1.45;
+  }
+
+  .dialog-bar {
+    font-family: "Courier New", ui-monospace, monospace;
+    letter-spacing: 0;
+  }
+}
+
 body:not(.use-texture-disc) .disc-preview.cd-disc {
   border: 1px solid rgba(245, 247, 255, .95) !important;
   border-radius: 50%;
