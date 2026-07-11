@@ -73,6 +73,7 @@ let currentScrollParallax = 0;
 let pointerParallaxX = 0;
 let pointerParallaxY = 0;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const lowPowerTouch = window.matchMedia("(pointer: coarse), (max-width: 820px)").matches;
 
 function loadHistory() {
   try {
@@ -547,7 +548,7 @@ function resetHistory() {
 }
 
 function resizeCanvas() {
-  const ratio = window.devicePixelRatio || 1;
+  const ratio = Math.min(window.devicePixelRatio || 1, lowPowerTouch ? 1.5 : 2);
   canvas.width = Math.floor(window.innerWidth * ratio);
   canvas.height = Math.floor(window.innerHeight * ratio);
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -557,7 +558,8 @@ function resizeCanvas() {
 function burstConfetti() {
   resizeCanvas();
   const colors = ["#ff5ccf", "#54fff1", "#b7ff28", "#fff16a", "#7f52ff", "#ffffff"];
-  confetti = Array.from({ length: 110 }, () => ({
+  const confettiCount = lowPowerTouch ? 58 : 110;
+  confetti = Array.from({ length: confettiCount }, () => ({
     x: window.innerWidth / 2 + (Math.random() - 0.5) * 80,
     y: window.innerHeight * 0.38,
     size: 5 + Math.random() * 9,
@@ -606,7 +608,7 @@ function clamp(value, min, max) {
 }
 
 function updateDomeParallaxTarget() {
-  if (reduceMotion || !glassDome) return;
+  if (reduceMotion || lowPowerTouch || !glassDome) return;
   const rect = glassDome.getBoundingClientRect();
   const centerOffset = rect.top + rect.height * 0.5 - window.innerHeight * 0.5;
   targetScrollParallax = clamp(-centerOffset / (window.innerHeight * 0.72), -1, 1);
@@ -614,13 +616,13 @@ function updateDomeParallaxTarget() {
 }
 
 function requestDomeParallaxRender() {
-  if (reduceMotion || parallaxFrame) return;
+  if (reduceMotion || lowPowerTouch || parallaxFrame) return;
   parallaxFrame = requestAnimationFrame(renderDomeParallax);
 }
 
 function renderDomeParallax() {
   parallaxFrame = null;
-  if (reduceMotion) return;
+  if (reduceMotion || lowPowerTouch) return;
 
   currentScrollParallax += (targetScrollParallax - currentScrollParallax) * 0.12;
 
@@ -642,7 +644,7 @@ function renderDomeParallax() {
 }
 
 function handleDomePointer(event) {
-  if (reduceMotion || !glassDome) return;
+  if (reduceMotion || lowPowerTouch || !glassDome) return;
   const rect = glassDome.getBoundingClientRect();
   pointerParallaxX = clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
   pointerParallaxY = clamp(((event.clientY - rect.top) / rect.height - 0.5) * 2, -1, 1);
