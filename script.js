@@ -16,19 +16,14 @@ const prizes = [
 const STORAGE_KEY = "birthday-sp-gacha-history-v1";
 const MAX_DISC_MESSAGE = 18;
 const DEFAULT_DISC_MESSAGE = "\u0052\u0069\u006e\u0061\u751f\u65e5\u5feb\u4e50";
+const TEXTURE_STORAGE_KEY = "birthday-sp-gacha-texture-disc";
 const PREVIEW_DURATION = 1620;
 const READ_DURATION = 1050;
 const SPIN_DURATION = 2400;
 const DROP_DURATION = 1180;
 const DISC_STYLES = ["disc-princess", "disc-melody", "disc-collage", "disc-lime", "disc-aqua", "disc-doodle"];
 const BOOT_ASSETS = [
-  "./images/rina_blink_sprite.webp",
-  "./images/disc-princess.png",
-  "./images/disc-melody.png",
-  "./images/disc-collage.png",
-  "./images/disc-lime.png",
-  "./images/disc-aqua.png",
-  "./images/disc-doodle.png"
+  "./images/rina_blink_sprite.webp"
 ];
 const BOOT_READY_DELAY = 400;
 const BOOT_FADE_DELAY = 460;
@@ -45,6 +40,7 @@ const againButton = document.querySelector("#again-button");
 const resetButton = document.querySelector("#reset-button");
 const closeDialog = document.querySelector("#close-dialog");
 const soundToggle = document.querySelector("#sound-toggle");
+const textureToggle = document.querySelector("#texture-toggle");
 const dialog = document.querySelector("#result-dialog");
 const prizeList = document.querySelector("#prize-list");
 const remainingCount = document.querySelector("#remaining-count");
@@ -83,6 +79,7 @@ let parallaxY = 0;
 let audioContext = null;
 let audioUnlocked = false;
 let soundMuted = localStorage.getItem("birthday-sp-gacha-muted") === "true";
+let textureDiscEnabled = localStorage.getItem(TEXTURE_STORAGE_KEY) === "true";
 let turnLocked = false;
 let parallaxFrame = null;
 let targetScrollParallax = 0;
@@ -213,14 +210,31 @@ function updateSpinMeter() {
   coinPips.forEach((pip) => pip.classList.toggle("is-filled", turnLocked));
 }
 
-function setDiscStyle(style) {
+function syncTextureToggle() {
+  document.body.classList.toggle("use-texture-disc", textureDiscEnabled);
+  if (textureToggle) {
+    textureToggle.textContent = textureDiscEnabled ? "IMG DISC" : "CSS DISC";
+    textureToggle.setAttribute("aria-pressed", String(textureDiscEnabled));
+  }
+  if (!textureDiscEnabled) {
+    setDiscStyle();
+  }
+}
+
+function setDiscStyle(style = "") {
   disc.classList.remove(...DISC_STYLES);
   discPreview.classList.remove(...DISC_STYLES);
-  disc.classList.add(style);
-  discPreview.classList.add(style);
+  if (textureDiscEnabled && style) {
+    disc.classList.add(style);
+    discPreview.classList.add(style);
+  }
 }
 
 function randomizeDiscStyle() {
+  if (!textureDiscEnabled) {
+    setDiscStyle();
+    return;
+  }
   const style = DISC_STYLES[Math.floor(Math.random() * DISC_STYLES.length)];
   setDiscStyle(style);
 }
@@ -507,35 +521,74 @@ function playNoise({ duration = 0.12, delay = 0, volume = 0.035 }) {
   source.start(start);
 }
 
-function playSfx(name) {
+function getRaritySoundProfile(rarity = "R") {
+  if (rarity === "SSR") return { root: 1.26, volume: 1.18, type: "triangle" };
+  if (rarity === "SR") return { root: 1.12, volume: 1.04, type: "sawtooth" };
+  if (rarity === "R") return { root: 1, volume: 0.94, type: "square" };
+  return { root: 0.86, volume: 0.82, type: "square" };
+}
+
+function playResultBgm(rarity = "R") {
+  const profile = getRaritySoundProfile(rarity);
+  const base = rarity === "SSR" ? [392, 523.25, 659.25, 783.99, 1046.5, 1318.51] :
+    rarity === "SR" ? [349.23, 440, 523.25, 659.25, 880] :
+    rarity === "R" ? [293.66, 392, 493.88, 587.33] :
+    [246.94, 293.66, 329.63, 392];
+
+  base.forEach((frequency, index) => {
+    playTone({
+      frequency: frequency * profile.root,
+      duration: rarity === "SSR" ? 0.18 : 0.14,
+      delay: 0.04 + index * (rarity === "SSR" ? 0.11 : 0.13),
+      type: profile.type,
+      volume: 0.028 * profile.volume
+    });
+  });
+
+  if (rarity === "SSR") {
+    playNoise({ duration: 0.34, delay: 0.18, volume: 0.012 });
+    [1567.98, 2093].forEach((frequency, index) => {
+      playTone({ frequency, duration: 0.2, delay: 0.72 + index * 0.12, type: "sine", volume: 0.026 });
+    });
+  }
+}
+
+function playSfx(name, rarity = "R") {
+  const profile = getRaritySoundProfile(rarity);
   if (name === "press") {
     playTone({ frequency: 220, slideTo: 440, duration: 0.08, volume: 0.045 });
     playTone({ frequency: 660, duration: 0.05, delay: 0.075, volume: 0.035 });
   }
 
+  if (name === "insert") {
+    playTone({ frequency: 180 * profile.root, slideTo: 260 * profile.root, duration: 0.07, type: "square", volume: 0.034 });
+    playNoise({ duration: 0.055, delay: 0.025, volume: 0.012 });
+  }
+
   if (name === "read") {
     [880, 987.77, 1174.66, 987.77].forEach((frequency, index) => {
-      playTone({ frequency, duration: 0.045, delay: index * 0.11, type: "sawtooth", volume: 0.022 });
+      playTone({ frequency: frequency * profile.root, duration: 0.045, delay: index * 0.11, type: profile.type, volume: 0.022 * profile.volume });
     });
     playNoise({ duration: 0.18, delay: 0.12, volume: 0.012 });
   }
 
   if (name === "spin") {
     [330, 392, 494, 659].forEach((frequency, index) => {
-      playTone({ frequency, duration: 0.055, delay: index * 0.12, volume: 0.032 });
+      playTone({ frequency: frequency * profile.root, duration: 0.055, delay: index * 0.12, type: profile.type, volume: 0.032 * profile.volume });
     });
   }
 
   if (name === "drop") {
-    playNoise({ duration: 0.08, volume: 0.025 });
-    playTone({ frequency: 176, slideTo: 88, duration: 0.16, delay: 0.02, volume: 0.05 });
+    playNoise({ duration: 0.08, volume: 0.025 * profile.volume });
+    playTone({ frequency: 176 * profile.root, slideTo: 88 * profile.root, duration: 0.16, delay: 0.02, volume: 0.05 * profile.volume });
   }
 
   if (name === "win") {
     [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
-      playTone({ frequency, duration: 0.11, delay: 0.16 + index * 0.09, volume: 0.05 });
+      playTone({ frequency: frequency * profile.root, duration: 0.11, delay: 0.16 + index * 0.09, type: profile.type, volume: 0.05 * profile.volume });
     });
-    playTone({ frequency: 1567.98, duration: 0.16, delay: 0.54, volume: 0.035 });
+    playTone({ frequency: 1567.98 * profile.root, duration: 0.16, delay: 0.54, type: "sine", volume: 0.035 * profile.volume });
+    playResultBgm(rarity);
   }
 
   if (name === "reset") {
@@ -594,6 +647,7 @@ function drawPrize() {
     playSfx("press");
     turnLocked = true;
     updateSpinMeter();
+    const prize = choosePrize();
     randomizeDiscStyle();
     syncDiscMessage();
     coinCount.textContent = "LOAD";
@@ -608,7 +662,7 @@ function drawPrize() {
     discPreview.classList.add("is-active");
 
     window.setTimeout(() => {
-      playSfx("read");
+      playSfx("read", prize.rarity);
       coinCount.textContent = "READ";
       machine.dataset.phase = "READING DISC";
       setButtonText("\u8bfb\u53d6\u5149\u76d8\u4e2d");
@@ -617,7 +671,7 @@ function drawPrize() {
     }, PREVIEW_DURATION);
 
     window.setTimeout(() => {
-      playSfx("spin");
+      playSfx("spin", prize.rarity);
       coinCount.textContent = "SYNC";
       machine.dataset.phase = "SYNCING GACHA";
       setButtonText("\u540c\u6b65\u626d\u86cb\u4e2d");
@@ -626,9 +680,8 @@ function drawPrize() {
 
       runCapsulePhysics()
         .then(() => {
-          const prize = choosePrize();
           const finaleClass = prize.rarity === "SSR" ? "finale-ssr" : prize.rarity === "SR" ? "finale-sr" : "finale-r";
-          playSfx("drop");
+          playSfx("drop", prize.rarity);
           coinCount.textContent = "DROP";
           machine.dataset.phase = "CAPSULE DROP";
           machine.classList.remove("reading", "syncing", "cranking", "spinning");
@@ -657,7 +710,7 @@ function showResult(prize) {
   resultDesc.textContent = prize.desc;
   resultRarity.textContent = `${prize.rarity} Prize`;
   if (!dialog.open) dialog.showModal();
-  playSfx("win");
+  playSfx("win", prize.rarity);
   burstConfetti();
 }
 
@@ -782,6 +835,7 @@ drawButton.addEventListener("click", drawPrize);
 discMessageInput.addEventListener("input", syncDiscMessage);
 againButton.addEventListener("click", () => {
   dialog.close();
+  resetMachineState();
   drawPrize();
 });
 closeDialog.addEventListener("click", () => dialog.close());
@@ -793,6 +847,14 @@ soundToggle.addEventListener("click", () => {
   if (!soundMuted) {
     unlockAudio();
     playSfx("press");
+  }
+});
+textureToggle?.addEventListener("click", () => {
+  textureDiscEnabled = !textureDiscEnabled;
+  localStorage.setItem(TEXTURE_STORAGE_KEY, String(textureDiscEnabled));
+  syncTextureToggle();
+  if (textureDiscEnabled) {
+    randomizeDiscStyle();
   }
 });
 document.addEventListener("pointerdown", unlockAudio, { passive: true });
@@ -812,7 +874,8 @@ window.addEventListener("beforeunload", () => {
 });
 
 startBootLoader();
-setDiscStyle(DISC_STYLES[0]);
+syncTextureToggle();
+setDiscStyle();
 syncDiscMessage();
 syncSoundToggle();
 updateSpinMeter();

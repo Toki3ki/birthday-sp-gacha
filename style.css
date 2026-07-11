@@ -1277,6 +1277,37 @@ h1 {
   animation: discInsert3d 1.04s cubic-bezier(0.18, 0.78, 0.18, 1) forwards;
 }
 
+.machine.inserting .coin {
+  opacity: 1;
+  transition: top .16s steps(2, end), transform .16s steps(2, end), filter .16s ease;
+  filter: drop-shadow(0 0 12px rgba(255, 92, 207, .32));
+}
+
+.machine.insert-step-1 .coin {
+  top: -28px;
+  transform: perspective(520px) rotateX(58deg) rotateY(-10deg) rotateZ(38deg) scale(1.02);
+}
+
+.machine.insert-step-2 .coin {
+  top: -4px;
+  transform: perspective(520px) rotateX(66deg) rotateY(4deg) rotateZ(142deg) scale(.88);
+}
+
+.machine.insert-step-3 .coin {
+  top: 19px;
+  transform: perspective(520px) rotateX(76deg) rotateY(8deg) rotateZ(238deg) scale(.72);
+  filter: drop-shadow(0 0 18px rgba(84, 255, 241, .42));
+}
+
+.machine.inserting .cd-drive::after {
+  opacity: .7;
+  animation: insertScan .22s steps(2, end);
+}
+
+.machine.inserting .draw-button {
+  transform: translateY(2px);
+}
+
 .machine.spinning .cd-reader span {
   animation: discReaderSpin 0.58s linear infinite;
 }
@@ -1689,6 +1720,11 @@ h1 {
 @keyframes readerScan {
   from { opacity: 0.2; transform: translateY(-12px); }
   to { opacity: 1; transform: translateY(12px); }
+}
+
+@keyframes insertScan {
+  0% { transform: translateY(-50%) scaleX(.45); opacity: .25; }
+  100% { transform: translateY(-50%) scaleX(1); opacity: .85; }
 }
 
 @keyframes readProgress {
@@ -5036,11 +5072,276 @@ body.use-static-avatar .rina-live2d {
   animation: none !important;
 }
 
+/* Original cat topper: a neutral pixel-pet silhouette, separate from Rina's avatar. */
+.cat-topper {
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  z-index: 9;
+  width: 132px;
+  height: 88px;
+  transform: translateX(-50%) scale(.86);
+  pointer-events: none;
+}
+
+.cat-face {
+  position: absolute;
+  left: 17px;
+  right: 17px;
+  top: 17px;
+  height: 61px;
+  border: 3px solid var(--edge);
+  border-radius: 46% 46% 43% 43%;
+  background: linear-gradient(145deg, #fffefb 0 45%, #dcecff 100%);
+  box-shadow: inset -8px -8px 0 rgba(137, 188, 255, .28), 0 8px 0 rgba(29, 23, 48, .14);
+}
+
+.cat-ear {
+  position: absolute;
+  top: 5px;
+  z-index: -1;
+  width: 36px;
+  height: 38px;
+  border: 3px solid var(--edge);
+  background: linear-gradient(145deg, #fffefb, #dcecff);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  filter: drop-shadow(0 5px 0 rgba(29, 23, 48, .14));
+}
+
+.cat-ear i {
+  position: absolute;
+  left: 11px;
+  top: 10px;
+  width: 14px;
+  height: 19px;
+  background: linear-gradient(160deg, #9bd9ff, #d7b5ef);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.cat-ear.left { left: 19px; transform: rotate(-12deg); }
+.cat-ear.right { right: 19px; transform: rotate(12deg); }
+
+.cat-face .eye {
+  position: absolute;
+  top: 29px;
+  width: 8px;
+  height: 12px;
+  border-radius: 50%;
+  background: #332846;
+}
+
+.cat-face .eye.left { left: 30px; }
+.cat-face .eye.right { right: 30px; }
+
+.cat-face .nose {
+  position: absolute;
+  left: calc(50% - 4px);
+  top: 40px;
+  width: 8px;
+  height: 7px;
+  border: 2px solid var(--edge);
+  border-radius: 50%;
+  background: #8fe8de;
+}
+
+.cat-face .whiskers {
+  position: absolute;
+  top: 40px;
+  width: 23px;
+  height: 17px;
+}
+
+.cat-face .whiskers::before,
+.cat-face .whiskers::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  border-top: 2px solid var(--edge);
+}
+
+.cat-face .whiskers.left { left: 1px; }
+.cat-face .whiskers.left::before { top: 1px; transform: rotate(8deg); }
+.cat-face .whiskers.left::after { bottom: 2px; transform: rotate(-10deg); }
+.cat-face .whiskers.right { right: 1px; }
+.cat-face .whiskers.right::before { top: 1px; transform: rotate(-8deg); }
+.cat-face .whiskers.right::after { bottom: 2px; transform: rotate(10deg); }
+
+.cat-paw {
+  position: absolute;
+  bottom: 0;
+  z-index: 5;
+  width: 25px;
+  height: 18px;
+  border: 3px solid var(--edge);
+  border-radius: 999px;
+  background: #fffefb;
+}
+
+.cat-paw.left { left: 32px; transform: rotate(-8deg); }
+.cat-paw.right { right: 32px; transform: rotate(8deg); }
+
+body:not(.use-texture-disc) .disc-preview.cd-disc {
+  border: 1px solid rgba(245, 247, 255, .95) !important;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(38, 32, 54, .95) 0 7%, rgba(222,226,238,.96) 8% 13%, rgba(255,255,255,.9) 14% 17%, transparent 18%),
+    linear-gradient(116deg, transparent 0 36%, rgba(255,255,255,.9) 42%, transparent 50%),
+    conic-gradient(from 24deg, #fbfdff, #dfe5f2, rgba(93,230,255,.46), #fbfdff, rgba(255,139,225,.42), #e3e6f0, rgba(171,151,255,.42), #fbfdff) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.72),
+    0 18px 42px rgba(111, 82, 143, .24) !important;
+}
+
+body:not(.use-texture-disc) .disc-preview.cd-disc::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  inset: 13%;
+  border-radius: 50%;
+  background:
+    linear-gradient(116deg, transparent 0 45%, rgba(255,255,255,.36) 48%, transparent 53%),
+    repeating-radial-gradient(circle, transparent 0 18px, rgba(52, 46, 68, .035) 18.5px, transparent 19px 32px);
+  pointer-events: none;
+}
+
+body:not(.use-texture-disc) .disc-preview.cd-disc::after {
+  content: "RINA.exe" !important;
+  display: block !important;
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  top: 42%;
+  height: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #3b2a4b;
+  background: rgba(255,255,255,.68);
+  font-size: clamp(.8rem, 2.4vw, 1.15rem);
+  font-weight: 900;
+  text-align: center;
+  pointer-events: none;
+  transform: rotate(-8deg);
+}
+
+/* Disc inscription and insert-play polish. */
+body:not(.use-texture-disc) .disc-preview .disc-text,
+body:not(.use-texture-disc) .coin .disc-text {
+  display: block !important;
+  position: relative;
+  z-index: 5;
+}
+
+body:not(.use-texture-disc) .disc-preview.cd-disc::after {
+  content: none !important;
+  display: none !important;
+}
+
+body:not(.use-texture-disc) .coin.cd-disc {
+  width: 64px;
+  left: calc(50% - 32px);
+  top: -38px;
+  overflow: visible;
+  border: 1px solid rgba(245, 247, 255, .94);
+  background:
+    radial-gradient(circle, rgba(38, 32, 54, .96) 0 7%, rgba(222,226,238,.96) 8% 13%, rgba(255,255,255,.9) 14% 17%, transparent 18%),
+    radial-gradient(circle at 30% 23%, rgba(255,255,255,.96), transparent 16%),
+    linear-gradient(116deg, transparent 0 36%, rgba(255,255,255,.9) 42%, transparent 50%),
+    conic-gradient(from 24deg, #fbfdff, #dfe5f2, rgba(93,230,255,.46), #fbfdff, rgba(255,139,225,.42), #e3e6f0, rgba(171,151,255,.42), #fbfdff) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.72),
+    0 11px 18px rgba(111, 82, 143, .2);
+  transform: perspective(640px) rotateX(54deg) rotateY(-15deg) rotateZ(-16deg) scale(1);
+}
+
+body:not(.use-texture-disc) .coin .disc-text {
+  max-width: 72%;
+  padding: 2px 5px;
+  font-size: .48rem;
+  color: #37112d;
+  background: rgba(255,255,255,.74);
+  transform: rotate(-8deg) translateY(2px);
+}
+
+body:not(.use-texture-disc) .disc-preview .disc-text {
+  max-width: 62%;
+  padding: 8px 14px;
+  font-size: clamp(1rem, 3vw, 1.55rem);
+  color: #37112d;
+  background: rgba(255,255,255,.76);
+  box-shadow: 0 2px 0 rgba(255,255,255,.86), 0 0 20px rgba(255, 92, 207, .34);
+}
+
+.machine.inserting .coin {
+  opacity: 1;
+  transition: top .18s steps(2, end), transform .18s steps(2, end), filter .16s ease;
+  filter: drop-shadow(0 0 14px rgba(255, 92, 207, .3));
+}
+
+.machine.insert-step-1 .coin {
+  top: -25px;
+  transform: perspective(640px) rotateX(50deg) rotateY(-18deg) rotateZ(18deg) translateY(0) scale(1);
+}
+
+.machine.insert-step-2 .coin {
+  top: -8px;
+  transform: perspective(640px) rotateX(62deg) rotateY(-6deg) rotateZ(112deg) translateY(2px) scale(.9);
+}
+
+.machine.insert-step-3 .coin {
+  top: 8px;
+  transform: perspective(640px) rotateX(74deg) rotateY(5deg) rotateZ(210deg) translateY(4px) scale(.76);
+  filter: drop-shadow(0 0 18px rgba(84, 255, 241, .42));
+}
+
+.machine.coining .coin {
+  animation: discInsert3dBetter 1.04s cubic-bezier(0.18, 0.78, 0.18, 1) forwards;
+}
+
+@keyframes discInsert3dBetter {
+  0% {
+    top: -25px;
+    opacity: 1;
+    transform: perspective(640px) rotateX(50deg) rotateY(-18deg) rotateZ(18deg) scale(1);
+  }
+  42% {
+    top: -4px;
+    opacity: 1;
+    transform: perspective(640px) rotateX(64deg) rotateY(-4deg) rotateZ(145deg) scale(.9);
+  }
+  76% {
+    top: 14px;
+    opacity: 1;
+    transform: perspective(640px) rotateX(78deg) rotateY(8deg) rotateZ(265deg) scale(.72);
+  }
+  100% {
+    top: 34px;
+    opacity: 0;
+    transform: perspective(640px) rotateX(84deg) rotateY(10deg) rotateZ(390deg) scale(.42);
+  }
+}
+
 @keyframes rinaSpriteBlink {
   0%, 86.99%, 94%, 100% { background-position: 0 0, 0 0; }
   87%, 88.99% { background-position: 33.333% 0, 0 0; }
   89%, 90.99% { background-position: 66.666% 0, 0 0; }
   91%, 93.99% { background-position: 100% 0, 0 0; }
+}
+
+/* Keep the OPEN-slot disc as a static engraved display; insertion is handled by the big preview disc. */
+.coin.cd-disc,
+body:not(.use-texture-disc) .coin.cd-disc,
+.machine.coining .coin,
+.machine.inserting .coin,
+.machine.insert-step-1 .coin,
+.machine.insert-step-2 .coin,
+.machine.insert-step-3 .coin {
+  left: calc(50% - 26px);
+  top: -48px;
+  width: 52px;
+  opacity: 1;
+  animation: none !important;
+  filter: drop-shadow(0 8px 10px rgba(111, 82, 143, .18));
+  transform: perspective(520px) rotateX(62deg) rotateZ(-18deg) scale(1.08);
 }
 
 .capsule {
