@@ -4715,3 +4715,144 @@ h1::after {
   0% { transform: translateX(-70%); }
   100% { transform: translateX(70%); }
 }
+
+
+/* Performance and mobile alignment pass ---------------------------------- */
+
+/* Keep the avatar visible at all times; blink only occasionally. */
+.rina-live2d .head-frame {
+  animation-duration: 8s;
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
+  will-change: opacity;
+}
+
+.rina-live2d .frame-1 {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+.rina-live2d .frame-2 { animation-name: rinaBlinkFrame2; }
+.rina-live2d .frame-3 { animation-name: rinaBlinkFrame3; }
+.rina-live2d .frame-4 { animation-name: rinaBlinkFrame4; }
+
+@keyframes rinaBlinkFrame2 {
+  0%, 87.99%, 90%, 100% { opacity: 0; }
+  88%, 89.99% { opacity: 1; }
+}
+
+@keyframes rinaBlinkFrame3 {
+  0%, 89.99%, 92%, 100% { opacity: 0; }
+  90%, 91.99% { opacity: 1; }
+}
+
+@keyframes rinaBlinkFrame4 {
+  0%, 91.99%, 94%, 100% { opacity: 0; }
+  92%, 93.99% { opacity: 1; }
+}
+
+/* Static CD material: no hue/filter animation on every capsule. */
+.machine.spinning .capsule::before,
+.machine.syncing .capsule::before,
+.capsule::before {
+  animation: none !important;
+}
+
+.capsule {
+  transition: transform 0.12s linear;
+  contain: layout paint style;
+}
+
+/* Center the complete machine inside every responsive container. */
+.gacha-card {
+  width: 100%;
+  justify-self: center;
+  place-items: center;
+  overflow: visible;
+}
+
+.machine {
+  width: min(430px, 100%);
+  max-width: 100%;
+  margin-inline: auto;
+  left: auto;
+  right: auto;
+  transform-origin: top center;
+}
+
+.glass,
+.turntable-base,
+.body,
+.marquee,
+.coin-meter {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 820px) {
+  .app-shell {
+    width: min(100%, calc(100% - 16px));
+    padding-inline: 0;
+  }
+
+  .stage {
+    width: 100%;
+    padding-left: clamp(8px, 3vw, 18px);
+    padding-right: clamp(8px, 3vw, 18px);
+  }
+
+  .gacha-card,
+  .machine {
+    width: 100%;
+    max-width: 430px;
+    margin-inline: auto;
+  }
+
+  .glass {
+    width: min(390px, 100%);
+    max-width: 100%;
+  }
+
+  .turntable-base {
+    width: min(360px, 94%);
+  }
+
+  .body {
+    width: min(370px, 94%);
+  }
+
+  /* Pointer parallax is unnecessary on touch screens and costs extra work. */
+  .parallax-layer {
+    will-change: auto;
+  }
+}
+
+@media (max-width: 460px) {
+  .stage {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .machine {
+    width: 100%;
+    max-width: 390px;
+  }
+
+  .glass {
+    width: min(100%, 370px) !important;
+  }
+
+  .marquee,
+  .coin-meter,
+  .body {
+    width: min(94%, 360px) !important;
+  }
+
+  .turntable-base {
+    width: min(92%, 350px) !important;
+  }
+
+  .rina-live2d::after {
+    opacity: 0.35;
+  }
+}

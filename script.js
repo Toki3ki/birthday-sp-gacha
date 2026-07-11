@@ -123,6 +123,9 @@ function initializeCapsules(force = false) {
 
   capsuleStates = capsuleEls.map((element, index) => {
     const size = element.offsetWidth || 54;
+    // Static holographic material: assign once instead of updating every frame.
+    element.style.setProperty("--holo-angle", `${(index * 29 + 18) % 360}deg`);
+    element.style.setProperty("--spec-angle", `${(index * 17 + 106) % 360}deg`);
     return {
       element,
       baseX: element.offsetLeft,
@@ -149,8 +152,7 @@ function renderCapsules() {
     state.element.style.setProperty("--py", `${py.toFixed(1)}px`);
     state.element.style.setProperty("--angle", `${state.angle.toFixed(1)}deg`);
     state.element.style.setProperty("--scale", scale.toFixed(3));
-    state.element.style.setProperty("--holo-angle", `${(state.angle * 0.72 + state.depth * 26).toFixed(1)}deg`);
-    state.element.style.setProperty("--spec-angle", `${(state.angle * -0.38 + 118 + state.depth * 18).toFixed(1)}deg`);
+
   });
 }
 
@@ -608,23 +610,35 @@ function updateDomeParallaxTarget() {
   const rect = glassDome.getBoundingClientRect();
   const centerOffset = rect.top + rect.height * 0.5 - window.innerHeight * 0.5;
   targetScrollParallax = clamp(-centerOffset / (window.innerHeight * 0.72), -1, 1);
+  requestDomeParallaxRender();
+}
+
+function requestDomeParallaxRender() {
+  if (reduceMotion || parallaxFrame) return;
+  parallaxFrame = requestAnimationFrame(renderDomeParallax);
 }
 
 function renderDomeParallax() {
+  parallaxFrame = null;
   if (reduceMotion) return;
 
-  currentScrollParallax += (targetScrollParallax - currentScrollParallax) * 0.08;
+  currentScrollParallax += (targetScrollParallax - currentScrollParallax) * 0.12;
 
   parallaxLayers.forEach((layer) => {
-    const x = currentScrollParallax * layer.x + pointerParallaxX * layer.x * 0.36;
-    const y = currentScrollParallax * layer.y + pointerParallaxY * layer.y * 0.2;
-    const rotate = currentScrollParallax * layer.rotate + pointerParallaxX * layer.rotate * 0.45;
+    const x = currentScrollParallax * layer.x + pointerParallaxX * layer.x * 0.28;
+    const y = currentScrollParallax * layer.y + pointerParallaxY * layer.y * 0.16;
+    const rotate = currentScrollParallax * layer.rotate + pointerParallaxX * layer.rotate * 0.32;
     layer.element.style.setProperty("--plx", `${x.toFixed(2)}px`);
     layer.element.style.setProperty("--ply", `${y.toFixed(2)}px`);
     layer.element.style.setProperty("--plr", `${rotate.toFixed(3)}deg`);
   });
 
-  parallaxFrame = requestAnimationFrame(renderDomeParallax);
+  const stillMoving =
+    Math.abs(targetScrollParallax - currentScrollParallax) > 0.002 ||
+    Math.abs(pointerParallaxX) > 0.002 ||
+    Math.abs(pointerParallaxY) > 0.002;
+
+  if (stillMoving) requestDomeParallaxRender();
 }
 
 function handleDomePointer(event) {
@@ -632,11 +646,13 @@ function handleDomePointer(event) {
   const rect = glassDome.getBoundingClientRect();
   pointerParallaxX = clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
   pointerParallaxY = clamp(((event.clientY - rect.top) / rect.height - 0.5) * 2, -1, 1);
+  requestDomeParallaxRender();
 }
 
 function resetDomePointer() {
   pointerParallaxX = 0;
   pointerParallaxY = 0;
+  requestDomeParallaxRender();
 }
 
 drawButton.addEventListener("click", drawPrize);
@@ -679,4 +695,4 @@ updateSpinMeter();
 renderPrizes();
 resizeCanvas();
 updateDomeParallaxTarget();
-renderDomeParallax();
+requestDomeParallaxRender();
